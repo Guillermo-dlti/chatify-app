@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { socket } from '../socket'
+import { socket } from './socket'
 import ManageConnection from './components/ManageConnection'
 import MyForm from './components/MyForm'
 import Channels from './components/Channels'
