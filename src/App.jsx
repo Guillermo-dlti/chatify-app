@@ -31,14 +31,14 @@ function App() {
       <ManageConnection />
 
       <div className='flex items-center justify-between mt-10 w-full'>
-        <div className='w-1/4 h-screen border-2'>
+        <div className='w-1/4 h-[600px] border-2'>
           <Channels />
         </div>
-        <div className='w-1/2 h-screen border-2 flex flex-col justify-center'>
+        <div className='w-1/2 h-[600px] border-2 flex flex-col justify-center'>
           <Chats />
           <MyForm />
         </div>
-        <div className='w-1/4 h-screen border-2'>
+        <div className='w-1/4 h-[600px] border-2'>
           <Users />
         </div>
       </div>
