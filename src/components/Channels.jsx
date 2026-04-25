@@ -12,7 +12,7 @@ function Channels({ currentRoom, onSelectRoom }) {
             className={[
               'group relative w-full cursor-pointer border py-2.5 pl-3 pr-2 text-left text-sm transition-all duration-200 sm:py-3 sm:pl-4',
               active
-                ? 'border-cyan-400/60 bg-gradient-to-r from-cyan-500/20 to-fuchsia-600/10 text-white shadow-[0_0_24px_rgba(34,211,238,0.25)]'
+                ? 'border-cyan-400/60 bg-linear-to-r from-cyan-500/20 to-fuchsia-600/10 text-white shadow-[0_0_24px_rgba(34,211,238,0.25)]'
                 : 'border-transparent text-slate-400 hover:border-cyan-500/25 hover:bg-white/5 hover:text-cyan-100',
             ].join(' ')}
             style={{

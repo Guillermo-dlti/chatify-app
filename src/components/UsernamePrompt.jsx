@@ -46,7 +46,7 @@ function UsernamePrompt({ room, onSubmit }) {
 
         <button
           type="submit"
-          className="w-full border border-fuchsia-400/50 bg-gradient-to-r from-fuchsia-600/50 to-cyan-600/40 py-2.5 text-sm font-semibold uppercase tracking-wider text-white shadow-[0_0_24px_rgba(232,121,249,0.2)] transition hover:shadow-[0_0_32px_rgba(232,121,249,0.35)]"
+          className="w-full border border-fuchsia-400/50 bg-linear-to-r from-fuchsia-600/50 to-cyan-600/40 py-2.5 text-sm font-semibold uppercase tracking-wider text-white shadow-[0_0_24px_rgba(232,121,249,0.2)] transition hover:shadow-[0_0_32px_rgba(232,121,249,0.35)]"
         >
           Continue
         </button>

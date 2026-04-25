@@ -35,7 +35,7 @@ function Chats() {
               clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%)',
             }}
           >
-            <span className="bg-gradient-to-r from-cyan-300 to-fuchsia-300 bg-clip-text font-semibold text-transparent">
+            <span className="bg-linear-to-r from-cyan-300 to-fuchsia-300 bg-clip-text font-semibold text-transparent">
               {m.username}
             </span>
             <p className="mt-1 leading-relaxed text-slate-300">{m.content}</p>
