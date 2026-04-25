@@ -11,6 +11,7 @@ function App() {
   useEffect(() => {
     const onConnect = () => {
       console.log('conectado')
+      socket.emit('join room', { username: 'Juan', room: 'General' })
     }
 
     socket.on('connect', onConnect)
