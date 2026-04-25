@@ -4,8 +4,16 @@ import { socket } from '../socket'
 function MyForm({ username, room }) {
   const [message, setMessage] = useState('')
 
+
   const handleOnChange = (e) => {
     setMessage(e.target.value)
+
+    if (!username || !room) return
+
+    socket.emit('typing', {
+      username,
+      room,
+    })
   }
 
   const handleClick = (e) => {
