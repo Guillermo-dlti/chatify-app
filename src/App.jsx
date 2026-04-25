@@ -15,6 +15,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [usernamesByRoom, setUsernamesByRoom] = useState({})
   const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
+  const [onlineCount, setOnlineCount] = useState(0)
 
   const joinRoom = (room, nextUsername) => {
     socket.emit('join room', {
@@ -29,6 +30,7 @@ function App() {
     }
 
     setCurrentRoom(room)
+    setOnlineCount(0)
 
     const storedUsername = usernamesByRoom[room]
     if (!storedUsername) {
@@ -80,7 +82,7 @@ function App() {
         <header className="shrink-0 px-4 pt-4 pb-3 sm:px-6">
           <div className="chatify-panel flex flex-wrap items-center justify-between gap-4 rounded-none px-4 py-3 sm:rounded-sm sm:px-5">
             <div className="flex min-w-0 flex-col gap-1">
-              <h1 className="chatify-brand text-xl font-bold sm:text-2xl">Chatify</h1>
+              <h1 className="chatify-brand text-3xl font-bold sm:text-5xl">Chatify</h1>
               <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-cyan-400/70 sm:text-xs">
                 Live channel link
               </p>
@@ -93,7 +95,7 @@ function App() {
         <main className="flex min-h-0 flex-1 gap-2 px-2 pb-2 pt-1 sm:gap-3 sm:px-4 sm:pb-4">
           <aside className="chatify-panel flex w-[min(22%,280px)] min-w-[10.5rem] shrink-0 flex-col overflow-hidden rounded-sm sm:min-w-[12rem] sm:rounded-md">
             <div className="chatify-panel-header px-3 py-3 sm:px-4">
-              <h2 className="font-['Orbitron',sans-serif] text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-300/90 sm:text-xs">
+              <h2 className="font-['Orbitron',sans-serif] text-sm font-semibold uppercase tracking-[0.28em] text-cyan-300/90 sm:text-2xl">
                 Channels
               </h2>
             </div>
@@ -105,7 +107,7 @@ function App() {
           <section className="chatify-panel flex min-w-0 flex-1 flex-col overflow-hidden rounded-sm sm:rounded-md">
             <div className="chatify-panel-header flex items-center justify-between gap-2 px-3 py-3 sm:px-4">
               <div>
-                <h2 className="truncate text-sm font-semibold text-white sm:text-base">{currentRoom}</h2>
+                <h2 className="truncate text-lg font-semibold text-white sm:text-2xl">{currentRoom}</h2>
                 <p className="text-[10px] uppercase tracking-widest text-fuchsia-300/70">Active feed</p>
               </div>
               <span className="hidden shrink-0 rounded border border-cyan-500/30 bg-cyan-500/10 px-2 py-1 text-[9px] font-medium uppercase tracking-wider text-cyan-200 sm:inline">
@@ -124,12 +126,15 @@ function App() {
 
           <aside className="chatify-panel flex w-[min(22%,280px)] min-w-[10.5rem] shrink-0 flex-col overflow-hidden rounded-sm sm:min-w-[12rem] sm:rounded-md">
             <div className="chatify-panel-header px-3 py-3 sm:px-4">
-              <h2 className="font-['Orbitron',sans-serif] text-[10px] font-semibold uppercase tracking-[0.28em] text-fuchsia-300/90 sm:text-xs">
+              <h2 className="font-['Orbitron',sans-serif] text-sm font-semibold uppercase tracking-[0.28em] text-fuchsia-300/90 sm:text-2xl">
                 Users
               </h2>
+              <p className="mt-1 text-xs uppercase tracking-widest text-lime-300/80 sm:text-sm">
+                Online ({onlineCount})
+              </p>
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto">
-              <Users />
+              <Users room={currentRoom} onUsersCountChange={setOnlineCount} />
             </div>
           </aside>
         </main>

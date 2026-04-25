@@ -1,12 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { socket } from '../socket'
 
-function Users() {
-  const users = ['Memo', 'Dani', 'Luis']
+function Users({ room, onUsersCountChange }) {
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    const onRoomUsers = (roomUsers) => {
+      setUsers(roomUsers)
+    }
+
+    socket.on('room users', onRoomUsers)
+    return () => {
+      socket.off('room users', onRoomUsers)
+    }
+  }, [])
+
+  useEffect(() => {
+    setUsers([])
+  }, [room])
+
+  useEffect(() => {
+    onUsersCountChange?.(users.length)
+  }, [users, onUsersCountChange])
+
   return (
     <div className="space-y-1 p-2 sm:p-3">
-      {users.map((u, i) => (
+      {users.map((u) => (
         <div
-          key={i}
+          key={u}
           className="flex items-center gap-3 border border-transparent py-2 pl-1 transition-colors hover:border-fuchsia-500/15 hover:bg-fuchsia-500/5 sm:py-2.5"
         >
           <span className="relative flex h-2.5 w-2.5 shrink-0">
@@ -19,6 +40,11 @@ function Users() {
           </span>
         </div>
       ))}
+      {users.length === 0 && (
+        <p className="px-1 py-2 text-xs text-slate-400">
+          No users online in {room}.
+        </p>
+      )}
     </div>
   )
 }
