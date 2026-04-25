@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { socket } from './socket'
 import ManageConnection from './components/ManageConnection'
 import MyForm from './components/MyForm'
@@ -9,13 +9,21 @@ import UsernamePrompt from './components/UsernamePrompt'
 import './App.css'
 
 const DEFAULT_ROOM = 'General'
+const AVAILABLE_ROOMS = ['General', 'Tech Talk', 'Random', 'Gaming']
 
 function App() {
   const [currentRoom, setCurrentRoom] = useState(DEFAULT_ROOM)
   const [username, setUsername] = useState('')
   const [usernamesByRoom, setUsernamesByRoom] = useState({})
   const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
+  const [allowRoomSelection, setAllowRoomSelection] = useState(true)
+  const [hasJoinedOnce, setHasJoinedOnce] = useState(false)
   const [onlineCount, setOnlineCount] = useState(0)
+  const hasJoinedOnceRef = useRef(false)
+
+  useEffect(() => {
+    hasJoinedOnceRef.current = hasJoinedOnce
+  }, [hasJoinedOnce])
 
   const joinRoom = (room, nextUsername) => {
     socket.emit('join room', {
@@ -35,6 +43,7 @@ function App() {
     const storedUsername = usernamesByRoom[room]
     if (!storedUsername) {
       setUsername('')
+      setAllowRoomSelection(false)
       setShowUsernamePrompt(true)
       return
     }
@@ -44,20 +53,26 @@ function App() {
     joinRoom(room, storedUsername)
   }
 
-  const saveUsernameForCurrentRoom = (nextUsername) => {
+  const saveUsernameForRoom = ({ username: nextUsername, room: targetRoom }) => {
+    const nextRoom = targetRoom || currentRoom
+
     setUsernamesByRoom((prevUsernamesByRoom) => ({
       ...prevUsernamesByRoom,
-      [currentRoom]: nextUsername,
+      [nextRoom]: nextUsername,
     }))
     setUsername(nextUsername)
+    setCurrentRoom(nextRoom)
     setShowUsernamePrompt(false)
-    joinRoom(currentRoom, nextUsername)
+    setHasJoinedOnce(true)
+    setOnlineCount(0)
+    joinRoom(nextRoom, nextUsername)
   }
 
   useEffect(() => {
     const onConnect = () => {
       console.log('conectado')
       setUsername('')
+      setAllowRoomSelection(!hasJoinedOnceRef.current)
       setShowUsernamePrompt(true)
     }
 
@@ -141,7 +156,12 @@ function App() {
       </div>
 
       {showUsernamePrompt && (
-        <UsernamePrompt room={currentRoom} onSubmit={saveUsernameForCurrentRoom} />
+        <UsernamePrompt
+          room={currentRoom}
+          rooms={AVAILABLE_ROOMS}
+          allowRoomSelection={allowRoomSelection}
+          onSubmit={saveUsernameForRoom}
+        />
       )}
     </div>
   )
