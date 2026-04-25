@@ -4,6 +4,17 @@ import { socket } from '../socket'
 function Chats({ username }) {
   const [messages, setMessage] = useState([])
 
+  const formatHour = (timestamp) => {
+    if (!timestamp) return '--:--'
+    const date = new Date(timestamp)
+    if (Number.isNaN(date.getTime())) return '--:--'
+
+    return date.toLocaleTimeString('es-MX', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
   useEffect(() => {
     socket.on('chat message', (messageData) => {
       console.log('Mensaje desde Server: ', messageData)
@@ -45,16 +56,28 @@ function Chats({ username }) {
                     : 'polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%)',
                 }}
               >
-                <span
-                  className={[
-                    'font-semibold',
-                    isCurrentUser
-                      ? 'bg-linear-to-r from-fuchsia-200 to-pink-200 bg-clip-text text-transparent'
-                      : 'bg-linear-to-r from-cyan-200 to-blue-200 bg-clip-text text-transparent',
-                  ].join(' ')}
-                >
-                  {isCurrentUser ? 'You' : m.username}
-                </span>
+                <div className="flex items-center justify-between gap-3">
+                  <span
+                    className={[
+                      'font-semibold',
+                      isCurrentUser
+                        ? 'bg-linear-to-r from-fuchsia-200 to-pink-200 bg-clip-text text-transparent'
+                        : 'bg-linear-to-r from-cyan-200 to-blue-200 bg-clip-text text-transparent',
+                    ].join(' ')}
+                  >
+                    {isCurrentUser ? 'You' : m.username}
+                  </span>
+                  <span
+                    className={[
+                      'rounded border px-1.5 py-0.5 text-xs font-medium tabular-nums',
+                      isCurrentUser
+                        ? 'border-fuchsia-300/40 bg-fuchsia-300/10 text-fuchsia-100'
+                        : 'border-cyan-300/40 bg-cyan-300/10 text-cyan-100',
+                    ].join(' ')}
+                  >
+                    {formatHour(m.created_at)}
+                  </span>
+                </div>
                 <p className={`mt-1 leading-relaxed ${isCurrentUser ? 'text-fuchsia-100' : 'text-cyan-100'}`}>
                   {m.content}
                 </p>
