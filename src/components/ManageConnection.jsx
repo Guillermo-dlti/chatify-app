@@ -2,91 +2,30 @@ import React from 'react'
 import { socket } from '../socket'
 
 const ManageConnection = () => {
-  const onConnect = () => {
-    console.log('Conectado')
-  }
-
-  const onDisconnect = () => {
-    console.log('Desconectado')
-  }
-
   const handleConection = (con) => {
-    console.log({ con });
+    console.log({ con })
     switch (con) {
       case 'on':
-        socket.connect();
-        break;
+        socket.connect()
+        break
       case 'off':
-        socket.disconnect();
-        break;
+        socket.disconnect()
+        break
       default:
-        break;
+        break
     }
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <button
-        onClick={() => handleConection('on')}
-        className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
-      >
+    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+      <button type="button" onClick={() => handleConection('on')} className="btn-neon-connect">
         Connect
       </button>
-
-      <button
-        onClick={() => handleConection('off')}
-        className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
-      >
+      <button type="button" onClick={() => handleConection('off')} className="btn-neon-disconnect">
         Disconnect
       </button>
     </div>
   )
 }
 
-export default ManageConnection;
-
-
-
-
-
-
-
-
-// import React from 'react'
-// import { socket } from '../socket'
-
-// const ManageConnection = () => {
-//   const onConnect = () => {
-//     console.log('Conectado')
-//   }
-
-//   const onDisconnect = () => {
-//     console.log('Desconectado')
-//   }
-
-//   const handleConection = (con) => {
-//     console.log({ con });
-//     switch (con) {
-//       case 'on':
-//         socket.connect();
-//         break;
-//       case 'off':
-//         socket.disconnect();
-//         break;
-//       default:
-//         break;
-//     }
-//   }
-
-//   return (
-//     <div>
-//       <button onClick={() => handleConection('on')}>Connect</button>
-//       <button onClick={() => handleConection('off')}>Disconnect</button>
-//     </div>
-//   )
-// }
-
-// export default ManageConnection;
-
-
-
+export default ManageConnection

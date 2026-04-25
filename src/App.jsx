@@ -72,115 +72,74 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#0b1120] text-gray-200 px-6 py-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex items-center justify-between border-b border-gray-800 pb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Chatify</h1>
-          </div>
+    <div className="chatify-shell h-screen text-slate-200 selection:bg-cyan-500/30 selection:text-white">
+      <div className="chatify-grid" aria-hidden />
+      <div className="chatify-scan" aria-hidden />
 
-          <div className="flex items-center gap-2">
+      <div className="chatify-content">
+        <header className="shrink-0 px-4 pt-4 pb-3 sm:px-6">
+          <div className="chatify-panel flex flex-wrap items-center justify-between gap-4 rounded-none px-4 py-3 sm:rounded-sm sm:px-5">
+            <div className="flex min-w-0 flex-col gap-1">
+              <h1 className="chatify-brand text-xl font-bold sm:text-2xl">Chatify</h1>
+              <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-cyan-400/70 sm:text-xs">
+                Live channel link
+              </p>
+            </div>
             <ManageConnection />
           </div>
-        </div>
+          <div className="chatify-glow-line mt-2 max-w-full" aria-hidden />
+        </header>
 
-        <div className="flex gap-4 h-[650px]">
-          <div className="w-1/4 bg-[#111827] border border-gray-800 rounded-2xl p-4 shadow-lg">
-            <h2 className="text-sm font-semibold text-gray-300 mb-4 uppercase tracking-wide">
-              Channels
-            </h2>
-            <Channels currentRoom={currentRoom} onSelectRoom={selectRoom} />
-          </div>
+        <main className="flex min-h-0 flex-1 gap-2 px-2 pb-2 pt-1 sm:gap-3 sm:px-4 sm:pb-4">
+          <aside className="chatify-panel flex w-[min(22%,280px)] min-w-[10.5rem] shrink-0 flex-col overflow-hidden rounded-sm sm:min-w-[12rem] sm:rounded-md">
+            <div className="chatify-panel-header px-3 py-3 sm:px-4">
+              <h2 className="font-['Orbitron',sans-serif] text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-300/90 sm:text-xs">
+                Channels
+              </h2>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <Channels currentRoom={currentRoom} onSelectRoom={selectRoom} />
+            </div>
+          </aside>
 
-          <div className="w-1/2 bg-[#111827] border border-gray-800 rounded-2xl shadow-lg flex flex-col overflow-hidden">
-            <div className="border-b border-gray-800 px-4 py-3">
-              <h2 className="text-sm font-semibold text-gray-300">{currentRoom}</h2>
+          <section className="chatify-panel flex min-w-0 flex-1 flex-col overflow-hidden rounded-sm sm:rounded-md">
+            <div className="chatify-panel-header flex items-center justify-between gap-2 px-3 py-3 sm:px-4">
+              <div>
+                <h2 className="truncate text-sm font-semibold text-white sm:text-base">{currentRoom}</h2>
+                <p className="text-[10px] uppercase tracking-widest text-fuchsia-300/70">Active feed</p>
+              </div>
+              <span className="hidden shrink-0 rounded border border-cyan-500/30 bg-cyan-500/10 px-2 py-1 text-[9px] font-medium uppercase tracking-wider text-cyan-200 sm:inline">
+                Encrypted
+              </span>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 py-4">
+            <div className="min-h-0 flex-1 overflow-hidden px-2 py-2 sm:px-4 sm:py-3">
               <Chats />
             </div>
 
-            <div className="border-t border-gray-800 px-4 py-4 bg-[#0f172a]">
+            <div className="shrink-0 border-t border-cyan-500/15 bg-slate-950/40 px-2 py-3 backdrop-blur-sm sm:px-4">
               <MyForm username={username} room={currentRoom} />
             </div>
-          </div>
+          </section>
 
-          <div className="w-1/4 bg-[#111827] border border-gray-800 rounded-2xl p-4 shadow-lg">
-            <h2 className="text-sm font-semibold text-gray-300 mb-4 uppercase tracking-wide">
-              Users
-            </h2>
-            <Users />
-          </div>
-        </div>
+          <aside className="chatify-panel flex w-[min(22%,280px)] min-w-[10.5rem] shrink-0 flex-col overflow-hidden rounded-sm sm:min-w-[12rem] sm:rounded-md">
+            <div className="chatify-panel-header px-3 py-3 sm:px-4">
+              <h2 className="font-['Orbitron',sans-serif] text-[10px] font-semibold uppercase tracking-[0.28em] text-fuchsia-300/90 sm:text-xs">
+                Users
+              </h2>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <Users />
+            </div>
+          </aside>
+        </main>
       </div>
+
       {showUsernamePrompt && (
-        <UsernamePrompt
-          room={currentRoom}
-          onSubmit={saveUsernameForCurrentRoom}
-        />
+        <UsernamePrompt room={currentRoom} onSubmit={saveUsernameForCurrentRoom} />
       )}
     </div>
   )
 }
 
 export default App
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { useState, useEffect } from 'react'
-// import { socket } from './socket'
-// import ManageConnection from './components/ManageConnection'
-// import MyForm from './components/MyForm'
-// import Channels from './components/Channels'
-// import Chats from './components/Chats'
-// import Users from './components/Users'
-// import './App.css'
-
-// function App() {
-
-//   useEffect(() => {
-//     const onConnect = () => {
-//       console.log("conectado");
-//     };
-//     socket.on("connect", onConnect);
-
-//     return () => {
-//       socket.off('disconnect');
-//       socket.off('connect', onConnect);
-//     }
-//   }, [])
-
-//   return (
-//     <>
-//       <h1>Chatify</h1>
-//       <ManageConnection />
-
-//       <div className='flex items-center justify-between mt-10 w-full'>
-//         <div className='w-1/4 h-[600px] border-2'>
-//           <Channels />
-//         </div>
-//         <div className='w-1/2 h-[600px] border-2 flex flex-col justify-center'>
-//           <Chats />
-//           <MyForm />
-//         </div>
-//         <div className='w-1/4 h-[600px] border-2'>
-//           <Users />
-//         </div>
-//       </div>
-//     </>
-//   )
-// }
-
-// export default App
