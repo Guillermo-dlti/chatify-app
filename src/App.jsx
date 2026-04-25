@@ -116,7 +116,7 @@ function App() {
             </div>
 
             <div className="min-h-0 flex-1 overflow-hidden px-2 py-2 sm:px-4 sm:py-3">
-              <Chats />
+              <Chats username={username} />
             </div>
 
             <div className="shrink-0 border-t border-cyan-500/15 bg-slate-950/40 px-2 py-3 backdrop-blur-sm sm:px-4">
