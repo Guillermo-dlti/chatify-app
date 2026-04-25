@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { socket } from '../socket';
 
-function MyForm() {
+function MyForm({ username, room }) {
     const [message, setMessage] = useState('');
 
     const handleOnChange = (e) => {
@@ -11,12 +11,12 @@ function MyForm() {
     const handleClick = (e) => {
         e.preventDefault();
 
-        if (!message.trim()) return;
+        if (!message.trim() || !username) return;
 
         socket.emit('chat message', {
             content: message,
-            username: "Juan",   // luego lo haces dinámico
-            room: "General"     // luego lo haces dinámico
+            username,
+            room
         });
 
         setMessage('');
@@ -29,11 +29,13 @@ function MyForm() {
                 name="message"
                 value={message}
                 onChange={handleOnChange}
+                disabled={!username}
                 placeholder="Type a message..."
                 className="flex-1 bg-[#020617] border border-gray-700 rounded-lg px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition"
             />
             <button
                 onClick={handleClick}
+                disabled={!username}
                 className="bg-purple-600 hover:bg-purple-500 active:scale-95 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
             >
                 Send

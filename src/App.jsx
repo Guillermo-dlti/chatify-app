@@ -1,20 +1,69 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { socket } from './socket'
 import ManageConnection from './components/ManageConnection'
 import MyForm from './components/MyForm'
 import Channels from './components/Channels'
 import Chats from './components/Chats'
 import Users from './components/Users'
+import UsernamePrompt from './components/UsernamePrompt'
 import './App.css'
 
+const DEFAULT_ROOM = 'General'
+
 function App() {
+  const [currentRoom, setCurrentRoom] = useState(DEFAULT_ROOM)
+  const [username, setUsername] = useState('')
+  const [usernamesByRoom, setUsernamesByRoom] = useState({})
+  const [showUsernamePrompt, setShowUsernamePrompt] = useState(false)
+
+  const joinRoom = (room, nextUsername) => {
+    socket.emit('join room', {
+      username: nextUsername,
+      room,
+    })
+  }
+
+  const selectRoom = (room) => {
+    if (currentRoom !== room) {
+      socket.emit('leave room', { room: currentRoom })
+    }
+
+    setCurrentRoom(room)
+
+    const storedUsername = usernamesByRoom[room]
+    if (!storedUsername) {
+      setUsername('')
+      setShowUsernamePrompt(true)
+      return
+    }
+
+    setUsername(storedUsername)
+    setShowUsernamePrompt(false)
+    joinRoom(room, storedUsername)
+  }
+
+  const saveUsernameForCurrentRoom = (nextUsername) => {
+    setUsernamesByRoom((prevUsernamesByRoom) => ({
+      ...prevUsernamesByRoom,
+      [currentRoom]: nextUsername,
+    }))
+    setUsername(nextUsername)
+    setShowUsernamePrompt(false)
+    joinRoom(currentRoom, nextUsername)
+  }
+
   useEffect(() => {
     const onConnect = () => {
       console.log('conectado')
-      socket.emit('join room', { username: 'Juan', room: 'General' })
+      setUsername('')
+      setShowUsernamePrompt(true)
     }
 
     socket.on('connect', onConnect)
+
+    if (socket.connected) {
+      onConnect()
+    }
 
     return () => {
       socket.off('connect', onConnect)
@@ -40,12 +89,12 @@ function App() {
             <h2 className="text-sm font-semibold text-gray-300 mb-4 uppercase tracking-wide">
               Channels
             </h2>
-            <Channels />
+            <Channels currentRoom={currentRoom} onSelectRoom={selectRoom} />
           </div>
 
           <div className="w-1/2 bg-[#111827] border border-gray-800 rounded-2xl shadow-lg flex flex-col overflow-hidden">
             <div className="border-b border-gray-800 px-4 py-3">
-              <h2 className="text-sm font-semibold text-gray-300">General Chat</h2>
+              <h2 className="text-sm font-semibold text-gray-300">{currentRoom}</h2>
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-4">
@@ -53,7 +102,7 @@ function App() {
             </div>
 
             <div className="border-t border-gray-800 px-4 py-4 bg-[#0f172a]">
-              <MyForm />
+              <MyForm username={username} room={currentRoom} />
             </div>
           </div>
 
@@ -65,6 +114,12 @@ function App() {
           </div>
         </div>
       </div>
+      {showUsernamePrompt && (
+        <UsernamePrompt
+          room={currentRoom}
+          onSubmit={saveUsernameForCurrentRoom}
+        />
+      )}
     </div>
   )
 }
